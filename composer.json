@@ -1,0 +1,15 @@
+{
+  "name": "vendor_name/fw.loc",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Maksim",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    
+  }
+}
