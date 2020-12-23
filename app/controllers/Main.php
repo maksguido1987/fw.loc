@@ -1,18 +1,19 @@
 <?php
 
+namespace app\controllers;
 
 class Main
 {
-    public function index()
+    public function indexAction()
     {
         echo 'Main::index';
     }
 
-    public function test()
+    public function testAction()
     {
         echo 'Main::test';
     }
-    public function testPage()
+    public function testPageAction()
     {
         echo 'Main::testPage';
     }

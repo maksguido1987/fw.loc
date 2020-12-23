@@ -1,10 +1,19 @@
 <?php
 
+namespace app\controllers;
 
-class Posts
+use vendor\core\base\Controller;
+
+class Posts extends Controller
 {
-    public function index()
+    public function indexAction()
     {
-        echo 'PostsNew::index';
+        echo 'Posts::index';
+    }
+
+    public function testAction()
+    {
+        debug($this->route);
+        echo 'Posts::test';
     }
 }

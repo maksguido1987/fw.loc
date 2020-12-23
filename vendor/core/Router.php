@@ -1,5 +1,6 @@
 <?php
 
+namespace vendor\core;
 
 class Router
 {
@@ -24,7 +25,12 @@ class Router
         return self::$route;
     }
 
-    // ищет совпадение с запросом в таблице маршрутов, если найдено, записывается в текущий маршрут
+
+    /**
+     * ищет совпадение с запросом в таблице маршрутов, если найдено, записывается в текущий маршрут
+     * @param $url
+     * @return bool
+     */
     public static function matchRoute($url)
     {
         foreach (self::$routes as $pattern => $route) {
@@ -37,23 +43,29 @@ class Router
                 if (!isset($route['action'])) {
                     $route['action'] = 'index';
                 }
+                $route['controller'] = self::upperCamelCase($route['controller']);
                 self::$route = $route;
-                debug($route);
                 return true;
             }
         }
         return false;
     }
 
-    // перенаправляет URL по корректному маршруту
+    /**
+     * перенаправляет URL корректному адресу
+     * @param $url
+     * @return void
+     */
     public static function dispatch($url)
     {
+        $url = self::removeQueryString($url);
+        var_dump($url);
         if (self::matchRoute($url)) {
-            $controller = self::upperCamelCase(self::$route['controller']);
+            $controller = 'app\controllers\\' . self::$route['controller'];
+            debug(self::$route);
             if (class_exists($controller)) {
-                $controlObject = new $controller;
-                $action = self::lowerCamelCase(self::$route['action']);
-                debug($action);
+                $controlObject = new $controller(self::$route);
+                $action = self::lowerCamelCase(self::$route['action']) . 'Action';
                 if (method_exists($controlObject, $action)) {
                     $controlObject->$action();
                 } else {
@@ -68,15 +80,42 @@ class Router
         }
     }
 
+    /**
+     * заменяет у строки - на ' ', приводит первые символы к верхнему регистру и затем склеивает
+     * @param $name
+     * @return string|string[]
+     */
     protected static function upperCamelCase($name)
     {
         return str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
 
     }
 
+    /**
+     * приводит первую букву к нижнему регистру
+     * @param $name
+     * @return string|string[]
+     */
     protected static function lowerCamelCase($name)
     {
         return lcfirst(self::upperCamelCase($name));
     }
+
+    /**
+     * обрезает возможные GET параметры
+     * @param $url
+     */
+    protected static function removeQueryString($url)
+    {
+        if ($url) {
+            $params = explode('&', $url, 2);
+            if (false === strpos($params[0], '=')) {
+                return rtrim($params[0], '/');
+            } else {
+                return '';
+            }
+        }
+    }
+
 
 }
