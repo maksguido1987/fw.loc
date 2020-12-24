@@ -11,6 +11,7 @@ define('WWW', __DIR__);
 define('CORE', dirname(__DIR__) . '/vendor/core');
 define('ROOT', dirname(__DIR__));
 define('APP', dirname(__DIR__) . '/app');
+define('LAYOUT', 'default');
 
 require_once '../vendor/core/Router.php';
 require_once '../vendor/libs/functions.php';
@@ -22,13 +23,13 @@ spl_autoload_register(function ($class) {
     }
 });
 
-Router::add("^page/(?P<action>[a-z-]+)/(?P<alias>[a-z-]+)$", ['controller' => 'Page']);
-Router::add("^page/(?P<alias>[a-z-]+)$", ['controller' => 'Page','action' => 'view']);
+// my routs
+Router::add("^page/(?P<action>[a-z-]+)/(?P<alias>[a-z-]+)$", ['controller' => 'PageController']);
+Router::add("^page/(?P<alias>[a-z-]+)$", ['controller' => 'PageController','action' => 'view']);
 
 // default routs
 Router::add("^$", ['controller' => 'Main', 'action' => 'index']);
 Router::add('^(?P<controller>[a-z-]+)/?(?P<action>[a-z-]+)?$');
 //Router::add('<controller>[a-z-]+>/<action>[a-z]+>'); аналог
-
 
 Router::dispatch($query);
